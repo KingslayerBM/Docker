@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EmailSent",
+  "type": "object",
+  "required": [
+    "type",
+    "eventId",
+    "ts",
+    "orderId",
+    "to"
+  ],
+  "properties": {
+    "type": {
+      "const": "EmailSent"
+    },
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ts": {
+      "type": "string"
+    },
+    "orderId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "to": {
+      "type": "string",
+      "format": "email"
+    }
+  },
+  "additionalProperties": true
+}

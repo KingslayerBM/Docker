@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PaymentCaptured",
+  "type": "object",
+  "required": [
+    "type",
+    "eventId",
+    "ts",
+    "orderId",
+    "amount"
+  ],
+  "properties": {
+    "type": {
+      "const": "PaymentCaptured"
+    },
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ts": {
+      "type": "string"
+    },
+    "orderId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "amount": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    }
+  },
+  "additionalProperties": true
+}

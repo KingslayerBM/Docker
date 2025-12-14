@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  orders:
+    build: ./services/orders
+    ports:
+      - "5002:5002"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC: orders.events
+    depends_on:
+      - kafka
+    restart: always
+
+  billing:
+    build: ./services/billing
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC: orders.events
+      KAFKA_GROUP_ID: billing
+    volumes:
+      - billing-data:/data
+    depends_on:
+      - kafka
+    restart: always
+
+  notifications:
+    build: ./services/notifications
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC: orders.events
+      KAFKA_GROUP_ID: notifications
+    depends_on:
+      - kafka
+    restart: always
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+volumes:
+  billing-data:
